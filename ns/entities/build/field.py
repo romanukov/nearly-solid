@@ -1,6 +1,7 @@
 from ns.entities.build.utils import is_primitive, is_enum
 from ns.entities.details import FieldDetails
 from ns.entities.const import missing
+from ns.entities.errors import EntitiesError, ErrorCodes
 
 
 class FieldBuilder:
@@ -8,9 +9,9 @@ class FieldBuilder:
         default_value = getattr(cls, field_name) if hasattr(cls, field_name) else missing
         not_missing_or_none = default_value is not missing and default_value is not None
         if not_missing_or_none and not isinstance(default_value, field_type):
-            raise ValueError(f'{cls.__name__}.{field_name} is not a {field_type}. Got: {default_value}')
+            raise EntitiesError(ErrorCodes.INVALID_FIELD_TYPE, need=field_type, got=default_value)
         details = FieldDetails(name=field_name, type=field_type, default_value=default_value)
-        setattr(cls, field_name, details)
+        setattr(cls, field_name, default_value)
         return details
 
     def is_field(self, field_type: type) -> bool:

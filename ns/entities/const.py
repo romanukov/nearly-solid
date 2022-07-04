@@ -1,3 +1,6 @@
+from datetime import date, datetime
+
+
 class missing:
     def __str__(self):
         return '<missing>'
@@ -7,3 +10,4 @@ class missing:
 
 
 missing = missing()
+PRIMITIVE_TYPES = str, int, float, bool, date, datetime, dict

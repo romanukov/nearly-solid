@@ -1,9 +1,12 @@
-from abc import ABC
-from dataclasses import dataclass
+
+from ns.deps.component import Component, ComponentMeta
 
 
-@dataclass
-class CommandsABC(ABC):
+class CommandsMeta(ComponentMeta):
+    ...
+
+
+class CommandsABC(Component, metaclass=CommandsMeta):
     """
     Базовый класс для команд бизнес-логики. Все не приватные и не магические
     методы этого класса будут зарегистрированы как команды.

@@ -1,10 +1,9 @@
-from datetime import date, datetime
 from enum import EnumMeta
-from typing import get_args, Optional
+from typing import get_args, Optional, Union
 
 from ns.entities.base.basemeta import BaseEntityMeta, BaseValueMeta
-
-PRIMITIVE_TYPES = str, int, float, bool, date, datetime, dict
+from ns.entities.const import PRIMITIVE_TYPES
+from ns.entities.errors import EntitiesError, ErrorCodes
 
 
 def is_primitive(field_type: type) -> bool:
@@ -23,16 +22,16 @@ def is_value(field_type: type) -> bool:
     return isinstance(field_type, BaseValueMeta)
 
 
-def is_list_of_data(field_type: type) -> Optional[type]:
-    if field_type.__name__ != 'list':
+def is_list_of_data(field_type: Union[type, str]) -> Optional[type]:
+    if isinstance(field_type, str) or field_type.__name__ != 'list':
         return
     generic_args_list = get_args(field_type)
     if len(generic_args_list) != 1:
-        raise ValueError(f'List must have 1 generic argument')
+        raise EntitiesError(ErrorCodes.LIST_MUST_HAVE_1_GENERIC_ARGUMENT)
     generic_arg: type = generic_args_list[0]
     if is_entity(generic_arg) or is_value(generic_arg):
         return generic_arg
-    raise ValueError(f'List must entity argument in generic type')
+    raise EntitiesError(ErrorCodes.LIST_MUST_HAVE_HAVE_ENTITY_ARGUMENT_IN_GENERIC)
 
 
 def is_list_of(check_type: type, generic_type: type) -> bool:

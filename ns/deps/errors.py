@@ -1,0 +1,18 @@
+from enum import Enum
+
+from ns.common.errors import Error
+
+
+class ErrorCodes(Enum):
+    ITEM_REGISTERED_YET = 'ITEM_REGISTERED_YET'
+    ITEM_NOT_FOUND = 'ITEM_NOT_FOUND'
+    DEPENDENCY_NOT_CONFIGURED = 'DEPENDENCY_NOT_CONFIGURED'
+    CONTAINER_FIELD_NOT_HAVE_VALUE = 'CONTAINER_FIELD_NOT_HAVE_VALUE'
+    CONTAINER_NOT_FOUND_IN_CONTAINER_FILE = 'CONTAINER_NOT_FOUND_IN_CONTAINER_FILE'
+    BETTER_THAN_1_CONTAINER_IN_FILE = 'BETTER_THAN_1_CONTAINER_IN_FILE'
+
+
+class DependencyError(Error[ErrorCodes]):
+    """
+    Ошибки обработки зависимостей
+    """

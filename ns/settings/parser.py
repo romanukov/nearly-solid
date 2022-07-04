@@ -1,19 +1,24 @@
 from abc import ABC
 from os import environ
 
-from ns.settings.errors import SettingsError, SettingsErrorCodes
+from ns.entities.const import missing
+from ns.settings.errors import SettingsError, ErrorCodes
 
 
 class ISettingsParser(ABC):
-    def get_setting(self, key: str, cast: type = str): ...
+    def get_setting(self, key: str, cast: type = str, default: any = missing): ...
 
 
 class EnvSettingsParser(ISettingsParser):
-    def get_setting(self, key: str, cast: type = str):
+    def get_setting(self, key: str, cast: type = str, default: any = missing):
         if key not in environ:
-            raise SettingsError(SettingsErrorCodes.SETTING_KEY_IS_REQUIRED, key=key)
+            if default is missing:
+                raise SettingsError(ErrorCodes.SETTING_KEY_IS_REQUIRED, key=key)
+            value = default
+        else:
+            value = environ[key]
         try:
-            value = cast(environ[key])
+            value = cast(value)
         except ValueError as err:
-            raise SettingsError(SettingsErrorCodes.INVALID_VALUE_FOR_CAST, message=str(err))
+            raise SettingsError(ErrorCodes.INVALID_VALUE_FOR_CAST, message=str(err))
         return value

@@ -9,6 +9,7 @@ class IEntityMagic:
     """
     __id__: str
     __details__: EntityDetails
+    __relations__: EntityDetails
 
 
 class IValueMagic:

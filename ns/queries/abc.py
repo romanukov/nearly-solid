@@ -1,9 +1,11 @@
-from abc import ABC
-from dataclasses import dataclass
+from ns.deps.component import Component, ComponentMeta
 
 
-@dataclass
-class BaseQueries(ABC):
+class QueriesMeta(ComponentMeta):
+    ...
+
+
+class QueriesABC(Component, metaclass=QueriesMeta):
     """
     Базовый класс для запросов бизнес-логики. Все не приватные и не магические
     методы этого класса будут зарегистрированы как запросы.

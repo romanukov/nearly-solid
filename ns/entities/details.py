@@ -1,6 +1,8 @@
 from dataclasses import dataclass
+from typing import Union
 
 from ns.entities.const import missing
+from ns.entities.errors import EntitiesError, ErrorCodes
 
 
 @dataclass
@@ -12,12 +14,15 @@ class EntityDetails:
     relations: list['Relation']  # Данные о связях с другими сущностями
     id_field_key: str  # Поле ID
 
+    def __hash__(self):
+        return hash(self.type,)
+
     @property
     def id_field(self) -> 'FieldDetails':
         for field in self.fields:
             if field.name == self.id_field_key:
                 return field
-        raise ValueError(f'ID field of {self.name} entity was not found')
+        raise EntitiesError(ErrorCodes.ID_NOT_FOUND, name=self.name)
 
     @property
     def to_one_relations(self) -> list['Relation']:
@@ -51,6 +56,6 @@ class FieldDetails:
 @dataclass
 class Relation:
     name: str  # Ключ поля
-    type: type  # Класс сущности, наследник IEntity
+    type: Union[str, type]  # Класс сущности, наследник IEntity
     to_many: bool  # Ссылается на массив или на
     is_value: bool = False  # Является ли реляцией на объект-значение

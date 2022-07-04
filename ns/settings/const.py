@@ -1,3 +1,3 @@
 
 
-ALLOWED_BUILTIN_TYPES = str, int, float
+ALLOWED_BUILTIN_TYPES = str, int, float, bool
